@@ -242,7 +242,6 @@ UnitCost_Panel=295; % Dollars per solar panel
 N_Panels=max(ceil(Load./(Ht.*(1+alpha*(Tamb-25))*Eta*Apanel)));
 %
 
-
 %
 % ================== Section 5 - Size Battery Storage =====================
 %
@@ -251,17 +250,21 @@ DOD = 0.5; % Depth of Discharge (Use 50% for longer life)
 RTE= 0.80; % Round trip efficiency - Assume ~80%
 %
 % Select a battery and record its nominal voltage, its capacity, and cost
- 
- 
+
+Capacity = 200;
+V_Battery = 12;
+UnitCost_Battery = 389.00;
 
 % Select a number of storage days (how long the system will last w/o sun)
- 
+
+StorageDays = 3;
+
 % Calculate the available energy per battery and the required number of
 % batteries (Round up to a whole number)
- 
- 
 
-
+Energy_Battery = V_Battery * Capacity * DOD * RTE;
+N_Batteries = (Load * StorageDays) / Energy_Battery;
+
 %
 % ============== Section 6 - Calculate Electric Generator Size ============
 %
