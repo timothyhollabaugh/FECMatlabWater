@@ -296,19 +296,23 @@ N_Batteries = (Load * StorageDays) / Energy_Battery;
 %
 % 
 RunTime_Estimated= 10; %Estimated Run Time in hours (DO NOT CHANGE)
+Load = 98.37;
+Load = Load/3.6;
+RunTime_Estimated= 10; %Estimated Run Time in hours (DO NOT CHANGE)
 % Estimated the Required power in Watts assuming a run time of 10 hours
- 
-%
+P_Generator_Estimated = (Load*2)/10 %Power in kW
+P_Generator_Effective = Load/10
 % Select a generator and set constants for the actual power, actual
 % runtime, fuel tank capacity, and cost
- 
- 
-
- 
+FuelTankCapacity = 12.0 %gallons
+InitialCost_Generator = 4017.00 %$
+Actual_RunTime = 32.4 %hours
 % Calculate the fuel used daily
+Fuel_Daily = FuelTankCapacity*(Load/P_Generator_Effective)*Actual_RunTime
  
 
-
+ 
+
 % ================= Section 7 - Calculate System Costs ====================
 %
 % Photovoltaic System:
