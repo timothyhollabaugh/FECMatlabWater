@@ -8,12 +8,13 @@
 %
 % Description: 
 %
-% Author: 
+% Author: Lance Guzman, Tim Hollabaugh, Montana Carlozo
 %
-% Date of last revision:
+% Date of last revision: 2018-2-28
 %
 % Clear variables and close open figures
-
+clear all
+close all
 
 %
 % ================ Section 1 - Establish Site Parameters ==================
@@ -57,22 +58,32 @@ n_elbow=4; % Number of elbows
 k_exit=1; % Loss coefficient at the exit from the PVC pipe to the storage tank
 %
 % Calculate cross-sectional area of PVC pipe in square meters
- 
+A_pipe = (D_pipe/2)^2*pi
 %
 nu=0.000001004; % Kinematic viscosity (in m^2/s) of water at 20 C (NOTE: Leave 
 % Unchanged)
 %
 % Calculate the velocity of water (m/s) through the pipe
-
+v = Q/A_pipe
 % Calculate the Reynold's number
- 
+Re = v*D_pipe/nu
 % Use an if/then statement to set f = 0 if flow is zero
- 
+if v == 0
+    f = 0;
+else
+    if Re <= 2100
+        f = 64/Re;
+    else
+        ftop = 0.2479-0.0000947(7-log(Re))^4
+        flog1 = ((epsilon)/(D_pipe))/3.615
+        flog2 = 7.366/Re^(0.9142)
+        f = (ftop)/((log(flog1+flog2))^2)
+    end
+end
+
 % Use indexing or if/then statements to solve for f (for laminar versus 
 % non=laminar flow)
- 
-% Make sure to end conditional statements.
-
+% Make sure to end conditional statements
 % 
 g= 9.8; % acceleration of gravity in m/s^2 (DO NOT CHANGE)
 %
