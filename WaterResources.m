@@ -1,4 +1,4 @@
-% NOTE: Copy and paste your section of this ?Start Here? document into MatLab % to get started.
+% NOTE: Copy and paste your section of this 'Start Here' document into MatLab % to get started.
 %
 % In this document Green is for constants you enter, Lime is for 
 % calculations or operations you need to perform, and Blue is for code that 
@@ -12,37 +12,52 @@
 %
 % Date of last revision: 2018-2-28
 %
+
 % Clear variables and close open figures
 clear all
 close all
+
 
 %
 % ================ Section 1 - Establish Site Parameters ==================
 %
 % Create Constants for the Latitude and Longitude in degrees
+Latitude = input('What is the latitude?')
+Longitude = input('What is the longitude?')
                                                                                                                                                                                                                                                                                                                                                                                                                                           
 % Round the values for Latitude and Longitude
+Latitude = round(Latitude);
+Longitude = round(Longitude);
  
 % Use xlsread to read Earth Skin Temp data and store it in a matrix called Tamb
+Tamb = xlsread('GlobalAverageTemperatures.xlsx');
  
 % Use indexing to reduce Tamb to a 1 x 12 vector of temperatures for the site latitude and longitude
+Tamb = Tamb((Tamb(:,1)==Latitude)& (Tamb(:,2)==Longitude));
+Tamb = Tamb(3:14);
  
 % Create a constant for the population 
+Population = input('Enter the population number')
  
 % Create a constant for the daily water consumption per person in Liters
+Water_Person = input('Enter the daily water consumption per person in liters.')
  
 % Calculate the total daily volume of water consumed in Liters
+Water_Total = Population*Water_Person;
  
 % Convert the daily volume of water consumed to m^3
+Water_Total = Water_Total/1000;
  
 % Calculate the flow rate in m^3/s
- 
+Q = Water_Total/86400;
 % Create a constant for the water table depth in feet
+h_water = input('What is the water table depth in feet?')
  
 % Convert the water table depth to meters
- 
+h_water = h_water/ 3.28084;
 % Add 5 m to the water table depth to calculate the pump depth 
- 
+h_pump = h_water + 5;
+
 
 %
 % ==================== Section 2 - Determine Daily Load ===================
