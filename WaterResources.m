@@ -89,7 +89,7 @@ else
     if Re <= 2100
         f = 64/Re;
     else
-        ftop = 0.2479-0.0000947(7-log(Re))^4
+        ftop = 0.2479-0.0000947*(7-log(Re))^4
         flog1 = ((epsilon)/(D_pipe))/3.615
         flog2 = 7.366/Re^(0.9142)
         f = (ftop)/((log(flog1+flog2))^2)
@@ -364,8 +364,7 @@ fprintf('\n The total cost of the solar energy system is: $%d \n',InitialCost_So
 fprintf('\n The power of the electric generator is: %.2f kW \n',P_Gen_Rated)
 fprintf('\n The cost of the electric generator is: $%.2f \n',InitialCost_Generator)
 fprintf('\n The year fuel cost to run the generator is: $%.2f \n',YearlyCost_Fuel)
-fprintf('\n In %.1f years, the accumulated generator system cost will equal the ?
- solar energy system costs\n',N)
+fprintf('\n In %.1f years, the accumulated generator system cost will equal the solar energy system costs\n',N)
 %
 % Display yearly costs of both systems in a table
 Year=Year';
