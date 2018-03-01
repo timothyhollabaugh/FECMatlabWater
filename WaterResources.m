@@ -117,76 +117,6 @@ Load = Load/1000000
 %
 % ============== Section 3 - Determine Daily Solar Insolation =============
 %
-% Create a 1 x 12 vector for the number of each month of the year
- 
-%
-% NOTE: DO NOT CHANGE MeanDay
-MeanDay=[17,47,75,105,135,162,198,228,258,288,318,344]; % Ave day of month (Klein,1977)
-%  
-% Create a constant for the albedo/Ground reflectivity See 
-% https://www.climatedata.info/forcing/albedo/ 
- 
-% Create a constant for the tilt angle of panels in degrees (Start with Beta 
-% equal to the absolute value of the Latitude.  The test different values)
- 
-% Create a matrix for H values read from excel file for Global Horizontal 
-% Solar kWh/m^2/day
- 
-% Use indexing to reduce H to a 1 X 12 vector for the values at the Latitude 
-% and Longitude
- 
-% Convert H from kWh/m^2/day to MJ/m^2/day
-
-% Create a vector called delta for the sun's declination angle in degrees for % each Mean Day
- 
-% Convert Latitude, Longitude, Beta, and delta from degrees to radians
-
-%
-% Sunset hour angle on a horizontal surface for each Mean Day in radians
-wsh=acos(-tan(Latitude)*tan(delta)); % DO NOT CHANGE
-%
-% Calculate the Sunset hour angle on tilted panels in radians
-
-% 
-% Ratio of Beam radiation on a tilted to horizontal surface for each Mean Day
-% DO NOT CHANGE
-if Latitude>=0 % Ratio for North hemisphere
-    Rb=(cos(Latitude-Beta)*cos(delta).*sin(ws)+...
-    ws*sin(Latitude-Beta).*sin(delta))./...
-    (cos(Latitude)*cos(delta).*sin(ws)+...
-    ws*sin(Latitude).*sin(delta));
-else % Ratio for South hemisphere
-    Rb=(cos(Latitude+Beta)*cos(delta).*sin(ws)+...
-    ws*sin(Latitude+Beta).*sin(delta))./...
-    (cos(Latitude)*cos(delta).*sin(ws)+...
-    ws*sin(Latitude).*sin(delta));
-end
-%
-% Clearness Index (DO NOT CHANGE)
-Gsc=1.367; % Solar constant in kW/m^2
-Gon=Gsc*(1+0.033*cos(MeanDay*2*pi/365)); % Extra-terrestial insolation on a 
-% normal surface
-
-Ho=24*Gon/pi.*(cos(Latitude)*cos(delta).*sin(wsh)+...
-wsh*sin(Latitude).*sin(delta)); % Daily Extra-terrestial solar energy 
-%(kWh/m^2/day) on a horizontal 
-% surface
-KT=H./(Ho*3.6); % Clearness Index
-%
-% Hd (Diffuse Radiation) --> Collares, Pereira, Rhal relation (DO NOT CHANGE)
-Hd(KT<=0.17)=0.99*H(KT<=0.17);
-Hd(KT>0.17 & KT < 0.75)=(1.188-2.272*KT(KT>0.17 & KT<0.75)+...
-    9.473*(KT(KT>0.17 & KT<0.75)).^2-21.865*(KT(KT>0.17 & KT<0.75)).^3+...
-    14.648*(KT(KT>0.17 & KT<0.75).^4)).*H(KT>0.17 & KT<0.75);
-Hd(KT>0.75 & KT < 0.8)=(0.632-0.54*KT(KT>0.75 & KT<0.8)).*H(KT>0.75 & KT<0.8);
-Hd(KT>=0.8)=0.2*H(KT>=0.8);
-%
-% Calculate the average radiation incident on tilted solar panels in MJ
-
-
-%
-% ============== Section 3 - Determine Daily Solar Insolation =============
-%
 % Month vectors
 MonthNumber=linspace(1,12,12); % Months of year
 MeanDay=[17,47,75,105,135,162,198,228,258,288,318,344]; % Ave day of month %(Klein,1977)  
