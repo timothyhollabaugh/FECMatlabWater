@@ -33,7 +33,7 @@ Longitude = round(Longitude);
 Tamb = xlsread('GlobalAverageTemperatures.xlsx');
  
 % Use indexing to reduce Tamb to a 1 x 12 vector of temperatures for the site latitude and longitude
-Tamb = Tamb((Tamb(:,1)==Latitude)& (Tamb(:,2)==Longitude));
+Tamb = Tamb((Tamb(:,1)==Latitude)& (Tamb(:,2)==Longitude),:);
 Tamb = Tamb(3:14);
  
 % Create a constant for the population 
@@ -89,9 +89,9 @@ else
     if Re <= 2100
         f = 64/Re;
     else
-        ftop = 0.2479-0.0000947*(7-log(Re))^4
-        flog1 = ((epsilon)/(D_pipe))/3.615
-        flog2 = 7.366/Re^(0.9142)
+        ftop = 0.2479-0.0000947*(7-log(Re))^4;
+        flog1 = ((epsilon)/(D_pipe))/3.615;
+        flog2 = 7.366/Re^(0.9142);
         f = (ftop)/((log(flog1+flog2))^2)
     end
 end
@@ -103,15 +103,17 @@ end
 g= 9.8; % acceleration of gravity in m/s^2 (DO NOT CHANGE)
 %
 %  Solve for Major and minor head losses
-
+h_major = f*((h_pump+h_tank)/(D_pipe))*(v^2/2*g)
+h_minor = (k_entrance+(n_elbow*k_elbow)+k_exit)*(v^2/2*g)
 % 
 rho = 998.2; % Density of water at 20 C in kg/m^3 (DO NOT CHANGE)
 efficiency=0.8;% Pump efficiency (NOTE: You are advised to leave these values 
 % unchanged)
 %
 % Solve for the daily energy required in MegaJoules
-
-
+h_total = h_pump+h_tank+h_major+h_minor
+Load = (Water_Total*rho*g*h_total)/efficiency
+Load = Load/1000000
 %
 % ============== Section 3 - Determine Daily Solar Insolation =============
 %
