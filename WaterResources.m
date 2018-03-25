@@ -12,7 +12,11 @@
 %
 % Date of last revision: 2018-2-28
 %
-
+%Central Africa coordinates:
+%2.3185° N, 19.5687° E
+%
+%
+%
 % Clear variables and close open figures
 clear all
 close all
@@ -20,8 +24,9 @@ close all
 % ================ Section 1 - Establish Site Parameters ==================
 % 2.766364, 24.734541
 % Create Constants for the Latitude and Longitude in degrees
-Latitude = input('What is the latitude?')
-Longitude = input('What is the longitude?')
+
+Latitude = input('What is the latitude?');
+Longitude = input('What is the longitude?');
 
 % Round the values for Latitude and Longitude
 Latitude = round(Latitude);
@@ -35,10 +40,10 @@ Tamb = Tamb((Tamb(:,1)==Latitude) & (Tamb(:,2)==Longitude), :);
 Tamb = Tamb(3:14);
 
 % Create a constant for the population 
-Population = input('Enter the population number')
+Population = input('Enter the population number');
 
 % Create a constant for the daily water consumption per person in Liters
-Water_Person = input('Enter the daily water consumption per person in liters.')
+Water_Person = input('Enter the daily water consumption per person in liters.');
 
 % Calculate the total daily volume of water consumed in Liters
 Water_Total = Population*Water_Person;
@@ -50,7 +55,7 @@ Water_Total = Water_Total/1000;
 Q = Water_Total/86400;
 
 % Create a constant for the water table depth in feet
-h_water = input('What is the water table depth in feet?')
+h_water = input('What is the water table depth in feet?');
 
 % Convert the water table depth to meters
 h_water = h_water/ 3.28084;
@@ -71,15 +76,15 @@ n_elbow=4; % Number of elbows
 k_exit=1; % Loss coefficient at the exit from the PVC pipe to the storage tank
 
 % Calculate cross-sectional area of PVC pipe in square meters
-A_pipe = (D_pipe/2)^2*pi
-
-nu=0.000001004; % Kinematic viscosity (in m^2/s) of water at 20 C (NOTE: Leave Unchanged)
-
+A_pipe = (D_pipe/2)^2*pi;
+%
+nu=0.000001004; % Kinematic viscosity (in m^2/s) of water at 20 C (NOTE: Leave 
+% Unchanged)
+%
 % Calculate the velocity of water (m/s) through the pipe
-v = Q/A_pipe
-
+v = Q/A_pipe;
 % Calculate the Reynold's number
-Re = v*D_pipe/nu
+Re = v*D_pipe/nu;
 
 % Use an if/then statement to set f = 0 if flow is zero
 if v == 0
@@ -88,10 +93,10 @@ else
     if Re <= 2100
         f = 64/Re;
     else
-        ftop = 0.2479-0.0000947*(7-log(Re))^4
-        flog1 = ((epsilon)/(D_pipe))/3.615
-        flog2 = 7.366/Re^(0.9142)
-        f = (ftop)/((log(flog1+flog2))^2)
+        ftop = 0.2479-0.0000947*(7-log(Re))^4;
+        flog1 = ((epsilon)/(D_pipe))/3.615;
+        flog2 = 7.366/Re^(0.9142);
+        f = (ftop)/((log(flog1+flog2))^2);
     end
 end
 
@@ -102,17 +107,16 @@ end
 g= 9.8; % acceleration of gravity in m/s^2 (DO NOT CHANGE)
 
 %  Solve for Major and minor head losses
-
-h_major = f * ((h_pump * h_tank) / D_pipe) * ((v * v) / (2 * g))
-h_minor = (k_entrance + n_elbow * k_elbow + k_exit) * ((v * v) / (2 * g))
-h_total = h_pump + h_tank + h_major + h_minor
+h_major = f*((h_pump+h_tank)/(D_pipe))*(v^2/2*g);
+h_minor = (k_entrance+(n_elbow*k_elbow)+k_exit)*(v^2/2*g);
 
 rho = 998.2; % Density of water at 20 C in kg/m^3 (DO NOT CHANGE)
 efficiency=0.8;% Pump efficiency (NOTE: You are advised to leave these values unchanged)
 
 % Solve for the daily energy required in MegaJoules
-Load = (Water_Total * rho * g * h_total) / (efficiency)
-Load = Load / 1000000
+h_total = h_pump+h_tank+h_major+h_minor;
+Load = (Water_Total*rho*g*h_total)/efficiency;
+Load = Load/1000000;
 
 % ============== Section 3 - Determine Daily Solar Insolation =============
 
