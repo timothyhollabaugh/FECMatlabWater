@@ -28,10 +28,10 @@ Latitude = round(Latitude);
 Longitude = round(Longitude);
 
 % Use xlsread to read Earth Skin Temp data and store it in a matrix called Tamb
-Tamb = xlsread('GlobalAverageTemperatures.xlsx', '', '', 'basic');
+Tamb = csvread('GlobalAverageTemperatures.csv');
 
 % Use indexing to reduce Tamb to a 1 x 12 vector of temperatures for the site latitude and longitude
-Tamb = Tamb((Tamb(:,1)==Latitude)& (Tamb(:,2)==Longitude));
+Tamb = Tamb((Tamb(:,1)==Latitude) & (Tamb(:,2)==Longitude), :);
 Tamb = Tamb(3:14);
 
 % Create a constant for the population 
@@ -103,12 +103,16 @@ g= 9.8; % acceleration of gravity in m/s^2 (DO NOT CHANGE)
 
 %  Solve for Major and minor head losses
 
+h_major = f * ((h_pump * h_tank) / D_pipe) * ((v * v) / (2 * g))
+h_minor = (k_entrance + n_elbow * k_elbow + k_exit) * ((v * v) / (2 * g))
+h_total = h_pump + h_tank + h_major + h_minor
 
 rho = 998.2; % Density of water at 20 C in kg/m^3 (DO NOT CHANGE)
-efficiency=0.8;% Pump efficiency (NOTE: You are advised to leave these values 
-% unchanged)
+efficiency=0.8;% Pump efficiency (NOTE: You are advised to leave these values unchanged)
 
 % Solve for the daily energy required in MegaJoules
+Load = (Water_Total * rho * g * h_total) / (efficiency)
+Load = Load / 1000000
 
 % ============== Section 3 - Determine Daily Solar Insolation =============
 
@@ -123,7 +127,7 @@ albedo=0.2; % albedo at site See https://www.climatedata.info/forcing/albedo/
 Beta = abs(Latitude); % example) tilt angle = absolute value of Latitude
 
 % Vector of values for H  MJ/day
-H=xlsread('GlobalHorizontalSolar.xlsx'); % H values worldwide in kW/m^2/day
+H=csvread('GlobalHorizontalSolar.csv'); % H values worldwide in kW/m^2/day
 H=H((H(:,1)==Latitude)& (H(:,2)==Longitude),3:end-1); % H values at site
 H=H*3.6; % H values in MJ/m^2/day
 
@@ -225,13 +229,15 @@ N_Batteries = (Load * StorageDays) / Energy_Battery;
 % ============== Section 6 - Calculate Electric Generator Size ============
 
 RunTime_Estimated= 10; %Estimated Run Time in hours (DO NOT CHANGE)
-Load = 98.37;
+%Load = 98.37;
 Load = Load/3.6;
 RunTime_Estimated= 10; %Estimated Run Time in hours (DO NOT CHANGE)
 
 % Estimated the Required power in Watts assuming a run time of 10 hours
 P_Generator_Estimated = (Load*2)/10 %Power in kW
 P_Generator_Effective = Load/10
+
+P_Gen_Rated = 7.5
 
 % Select a generator and set constants for the actual power, actual
 % runtime, fuel tank capacity, and cost
